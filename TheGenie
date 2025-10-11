@@ -1,0 +1,117 @@
+// ============================================================================
+// Title: The Mischievous Genie Game
+// Version: v1.0
+// Purpose: Introduce classes, inheritance, composition, and user input in Kotlin
+// ============================================================================
+
+// ---------------------------
+// CLASS 1: User Data Model
+// ---------------------------
+
+import kotlin.random.Random
+// Responsible for holding user information.
+class Player(val name: String, val age: Int) {
+    fun introduceYourself() {
+        println("Nice to meet you, $name! You’re $age years young!")
+    }
+}
+
+// ---------------------------
+// CLASS 2: The Base Character Class
+// ---------------------------
+// Demonstrates inheritance. A "Genie" will inherit from this class.
+open class Character(val characterName: String) {
+    open fun speak(message: String) {
+        println("$characterName: $message")
+    }
+}
+
+// ---------------------------
+// CLASS 3: Genie (Inherits from Character)
+// ---------------------------
+// Adds personality, and contains a Game object (composition).
+class Genie(characterName: String) : Character(characterName) {
+    // Composition: The Genie "has a" Game
+    private val game = GuessingGame()
+
+    fun greetPlayer(player: Player) {
+        speak("Ahhh... I see you, ${player.name}! I am the mystical $characterName, master of numbers and trickery!")
+    }
+
+    fun inviteToPlay(): Boolean {
+        speak("Would you like to play a game with me? (Y/N)")
+        val response = readLine()?.trim()?.uppercase()
+        return response == "Y" || response == "YES"
+    }
+
+    fun playGame(player: Player) {
+        val won = game.start()
+        if (won) {
+            speak("Bravo, ${player.name}! You guessed correctly!")
+            speak("As for your fabulous prize...")
+            // Gentle humor and moral lesson
+            speak("Honestly, ${player.name}, by the sweet age of ${player.age}, you should know better than to believe everything everybody tells you!")
+        } else {
+            speak("Ahaha! Wrong guess! The spirits of the numbers laugh at you!")
+            speak("Would you like to try again, ${player.name}? (Y/N)")
+            val again = readLine()?.trim()?.uppercase()
+            if (again == "Y" || again == "YES") {
+                playGame(player) // Recursive retry
+            } else {
+                speak("Farewell then, mortal! Perhaps next time you’ll be luckier!")
+            }
+        }
+    }
+}
+
+// ---------------------------
+// CLASS 4: GuessingGame
+// ---------------------------
+// Demonstrates encapsulation of logic and randomization.
+
+class GuessingGame {
+    fun start(): Boolean {
+        println("I'm thinking of a number between 1 and 10.")
+        print("Your guess: ")
+        val userGuess = readLine()?.toIntOrNull()
+
+        // Generate a random number between 1 and 10
+        val geniesNumber = Random.nextInt(1, 11)
+
+        println("The genie's number was $geniesNumber.")
+
+        // Return true if user guessed correctly
+        return userGuess == geniesNumber
+    }
+}
+
+// ---------------------------
+// MAIN FUNCTION
+// ---------------------------
+// The entry point of any Kotlin program.
+fun main() {
+    println("✨ Welcome to the Realm of Mystical Code ✨")
+    print("Please enter your name: ")
+    val name = readLine()?.trim().orEmpty()
+
+    print("And your age: ")
+    val age = readLine()?.toIntOrNull() ?: 0
+
+    // Create Player object
+    val player = Player(name, age)
+
+    // Create Genie character
+    val genie = Genie("Zoltar the Whimsical")
+
+    // Dialogue flow
+    genie.greetPlayer(player)
+    player.introduceYourself()
+
+    if (genie.inviteToPlay()) {
+        genie.playGame(player)
+    } else {
+        genie.speak("Ah, perhaps another time then, ${player.name}. Farewell!")
+    }
+
+    println("\n✨ End of Program ✨")
+}

@@ -1,3 +1,41 @@
+Lab : Simple Format: 
+
+class Starship(
+    // class fields
+    val name: String,
+    val type: String,
+    var crewCount: Int,
+    var warpSpeed: Double)
+
+{
+    fun reportStatus(){
+        println(" Starship '$name' [$type] has $crewCount crew onboard. ")
+        println(" Current warp speed is: $warpSpeed ")
+    }
+
+    fun engageWarp(newSpeed: Double){
+        println("Engaging warp drive!")
+        warpSpeed = newSpeed
+        println(" Warp speed is now set to : $warpSpeed ")
+    }
+
+    fun disembarkCrew(number: Int){
+        if (number <= crewCount){
+            crewCount -= number
+            println(" $number crew members disembarked")
+        }
+        else
+            println(" not enough crew on board to disembark $number crew members ")
+    }
+}
+// instantiate into an object:
+    val Enterprise = Starship(name = "USS Enterprise",  type = "Constitution Class", crewCount = 430, warpSpeed = 5.0)
+    Enterprise.reportStatus()
+    Enterprise.engageWarp(7.5)
+    Enterprise.disembarkCrew(30)
+    Enterprise.reportStatus()
+
+
 Lab exercise that teaches both **composition** and **inheritance** using a `StarShip` superclass, with compositional subsystems like `Phasers`, `PhotonTorpedoes`, and `Shields`.
 
 **“Battle-Ready Architecture: Inheritance + Composition with StarShips”**

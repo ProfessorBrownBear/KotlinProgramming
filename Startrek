@@ -1,0 +1,154 @@
+Lab exercise that teaches both **composition** and **inheritance** using a `StarShip` superclass, with compositional subsystems like `Phasers`, `PhotonTorpedoes`, and `Shields`.
+
+**“Battle-Ready Architecture: Inheritance + Composition with StarShips”**
+
+## 🧠 Learning Objectives
+
+* Model **real-world systems** using **class inheritance** (is-a relationship)
+* Use **composition** to express modular subsystems (has-a relationship)
+* Understand **constructor chaining**, polymorphism, and class overrides
+
+---
+
+## 📄 File: `StarFleet.kt`
+
+```kotlin
+// === Compositional Subsystems ===
+
+class Phasers(var level: Int) {
+    fun fire() = println("Phasers firing at level $level!")
+}
+
+class PhotonTorpedoes(var count: Int) {
+    fun launch() {
+        if (count > 0) {
+            println("Launching a photon torpedo!")
+            count--
+        } else {
+            println("No photon torpedoes left!")
+        }
+    }
+}
+
+class Shields(var strength: Int) {
+    fun activate() = println("Shields up! Strength at $strength%")
+}
+```
+
+---
+
+## 📄 Continue in same file: `StarFleet.kt`
+
+```kotlin
+// === Superclass ===
+
+open class StarShip(val name: String) {
+    val phasers = Phasers(5)
+    val torpedoes = PhotonTorpedoes(2)
+    val shields = Shields(100)
+
+    open fun status() {
+        println("Starship $name is online.")
+        shields.activate()
+    }
+
+    open fun attack() {
+        phasers.fire()
+        torpedoes.launch()
+    }
+}
+
+
+## 📄 Subclasses: Unique behaviors
+
+```kotlin
+class Cruiser(name: String) : StarShip(name) {
+    override fun attack() {
+        println("Cruiser $name engaging enemy!")
+        phasers.level = 6
+        super.attack()
+    }
+}
+
+class Battleship(name: String) : StarShip(name) {
+    override fun attack() {
+        println("Battleship $name unleashes full assault!")
+        phasers.level = 10
+        torpedoes.count = 5
+        super.attack()
+    }
+}
+
+class Scout(name: String) : StarShip(name) {
+    override fun status() {
+        println("Scout $name flying silent — shields at minimal level.")
+    }
+
+    override fun attack() {
+        println("Scout $name avoids direct conflict.")
+    }
+}
+
+
+## 🧪 Demo Code to Run in `main()`
+
+```kotlin
+fun main() {
+    val enterprise = Cruiser("USS Enterprise")
+    val defiant = Battleship("USS Defiant")
+    val intrepid = Scout("USS Intrepid")
+
+    enterprise.status()
+    enterprise.attack()
+
+    println("----")
+
+    defiant.status()
+    defiant.attack()
+
+    println("----")
+
+    intrepid.status()
+    intrepid.attack()
+}
+```
+
+---
+
+## 📊 Expected Output (Simplified)
+
+```
+Starship USS Enterprise is online.
+Shields up! Strength at 100%
+Cruiser USS Enterprise engaging enemy!
+Phasers firing at level 6!
+Launching a photon torpedo!
+
+Starship USS Defiant is online.
+Shields up! Strength at 100%
+Battleship USS Defiant unleashes full assault!
+Phasers firing at level 10!
+Launching a photon torpedo!
+
+Scout USS Intrepid flying silent — shields at minimal level.
+Scout USS Intrepid avoids direct conflict.
+
+
+## 💬 Key Teaching Messages
+
+| Concept                  | Example                                                     |
+| ------------------------ | ----------------------------------------------------------- |
+| **Inheritance**          | `Cruiser` *is a* `StarShip`                                 |
+| **Composition**          | A ship *has* `Phasers`, `Torpedoes`, `Shields`              |
+| **Override Behavior**    | Subclasses specialize attack/status                         |
+| **Constructor Chaining** | `super()` is called implicitly                              |
+| **Encapsulation**        | Subsystems have their own logic (`fire()`, `launch()` etc.) |
+
+
+## 🎓 Challenge Extensions (Optional)
+
+* Track ship health and simulate taking damage
+* Allow torpedo reloads or shield regeneration
+* Add a `FleetCommander` who can order ships to attack in sequence
+
+
